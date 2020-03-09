@@ -1,7 +1,10 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="ChangeListManager">
-    <list default="true" id="fd922505-9bf6-4dd0-a10f-32ae62faba14" name="Default Changelist" comment="" />
+    <list default="true" id="fd922505-9bf6-4dd0-a10f-32ae62faba14" name="Default Changelist" comment="">
+      <change afterPath="$PROJECT_DIR$/README.md" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.gitignore" beforeDir="false" />
+    </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
@@ -14,7 +17,11 @@
       </list>
     </option>
   </component>
+  <component name="Git.Settings">
+    <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
+  </component>
   <component name="ProjectId" id="1YQs4vEZoWS4uMu4FhiSEQJIUvB" />
+  <component name="ProjectLevelVcsManager" settingsEditedManually="true" />
   <component name="ProjectViewState">
     <option name="hideEmptyMiddlePackages" value="true" />
     <option name="showExcludedFiles" value="true" />
@@ -163,23 +170,34 @@
     </task>
     <servers />
   </component>
+  <component name="Vcs.Log.Tabs.Properties">
+    <option name="TAB_STATES">
+      <map>
+        <entry key="MAIN">
+          <value>
+            <State />
+          </value>
+        </entry>
+      </map>
+    </option>
+  </component>
   <component name="WindowStateProjectService">
-    <state width="1278" height="214" key="GridCell.Tab.0.bottom" timestamp="1583775901913">
+    <state width="1278" height="214" key="GridCell.Tab.0.bottom" timestamp="1583778438188">
       <screen x="65" y="24" width="1301" height="744" />
     </state>
-    <state width="1278" height="214" key="GridCell.Tab.0.bottom/65.24.1301.744@65.24.1301.744" timestamp="1583775901913" />
-    <state width="1278" height="214" key="GridCell.Tab.0.center" timestamp="1583775901912">
+    <state width="1278" height="214" key="GridCell.Tab.0.bottom/65.24.1301.744@65.24.1301.744" timestamp="1583778438188" />
+    <state width="1278" height="214" key="GridCell.Tab.0.center" timestamp="1583778438188">
       <screen x="65" y="24" width="1301" height="744" />
     </state>
-    <state width="1278" height="214" key="GridCell.Tab.0.center/65.24.1301.744@65.24.1301.744" timestamp="1583775901912" />
-    <state width="1278" height="214" key="GridCell.Tab.0.left" timestamp="1583775901912">
+    <state width="1278" height="214" key="GridCell.Tab.0.center/65.24.1301.744@65.24.1301.744" timestamp="1583778438188" />
+    <state width="1278" height="214" key="GridCell.Tab.0.left" timestamp="1583778438187">
       <screen x="65" y="24" width="1301" height="744" />
     </state>
-    <state width="1278" height="214" key="GridCell.Tab.0.left/65.24.1301.744@65.24.1301.744" timestamp="1583775901912" />
-    <state width="1278" height="214" key="GridCell.Tab.0.right" timestamp="1583775901913">
+    <state width="1278" height="214" key="GridCell.Tab.0.left/65.24.1301.744@65.24.1301.744" timestamp="1583778438187" />
+    <state width="1278" height="214" key="GridCell.Tab.0.right" timestamp="1583778438188">
       <screen x="65" y="24" width="1301" height="744" />
     </state>
-    <state width="1278" height="214" key="GridCell.Tab.0.right/65.24.1301.744@65.24.1301.744" timestamp="1583775901913" />
+    <state width="1278" height="214" key="GridCell.Tab.0.right/65.24.1301.744@65.24.1301.744" timestamp="1583778438188" />
     <state width="1278" height="239" key="GridCell.Tab.1.bottom" timestamp="1583686794759">
       <screen x="65" y="24" width="1301" height="744" />
     </state>
