@@ -9,6 +9,9 @@ import os
 import models
 import data
 import parser
+from utils import readShortVideo
+from test import evaluate
+
 
 
 def save_model(model, save_path):
@@ -25,6 +28,19 @@ def transforms_array(array):
         transforms.Normalize(MEAN, STD)
     ])
     return transform(array)
+
+def batch_padding(batch_fea, batch_cls):
+    n_frames = [fea.shape[0] for fea in batch_fea]
+    perm_index = np.argsort(n_frames)[::-1]
+
+    # sort by sequence length
+    batch_fea_sort = [batch_fea[i] for i in perm_index]
+    #print(len(batch_fea_sort))
+    n_frames = [fea.shape[0] for fea in batch_fea_sort]
+    padded_sequence = nn.utils.rnn.pad_sequence(batch_fea_sort, batch_first=True)
+    label = torch.LongTensor(np.array(batch_cls)[perm_index])
+    return padded_sequence, label, n_frames
+
 
 
 args = parser.arg_parse()
@@ -74,14 +90,14 @@ feature_stractor = models.Stractor()
 feature_stractor = feature_stractor.cuda()
 #feature_stractor = feature_stractor.eval()
 
-classifier = models.Classifier()
-classifier = classifier.cuda()
+rnn = models.DecoderRNN()
+rnn = rnn.cuda()
 
 ''' define loss '''
 criterion = nn.CrossEntropyLoss()
 
 ''' setup optimizer '''
-params = list(classifier.parameters()) + list(feature_stractor.parameters())
+params = list(rnn.parameters()) + list(feature_stractor.parameters())
 optimizer = optim.Adam(params, lr=args.lr, weight_decay=args.weight_decay)
 
 iters = 0
@@ -89,15 +105,69 @@ accs = []
 best_acc = 0
 print('===> begin training ...')
 for epoch in range(1, args.epoch + 1):
-    for idx, (video, label) in enumerate(train_loader): #loads several videos
-            train_info = 'Epoch: [{0}][{1}/{2}]'.format(epoch, idx + 1, len(train_loader))
+    for idx, (videos) in enumerate(train_loader): #loads several videos
+        train_info = 'Epoch: [{0}][{1}/{2}]'.format(epoch, idx + 1, len(train_loader))
 
-            iters += 1
+        iters += 1
+        label = []
+        features = []
+        for i in range(len(videos)):
+            # print('working in video', i + 1, '/', idx + 1)
+            frames = readShortVideo(args.data_dir, videos.get('clip_name')[i])
+            # print(frames.shape)
+            vid = []
+            for j in range(frames.shape[0]):
+                im = transforms_array(frames[j])
+                vid.append(im)
+            vid = torch.stack(vid)
+            vid = vid.cuda()
+            print('working in video ', videos.get('video_index')[i], ' with size ', vid.shape)
+            feature = feature_stractor(vid)
+            #print(feature.shape)
+            features.append(feature)
+            label.append(int(videos.get('label_number')[i]))
 
-            video = video.cuda()
-            #print(video.shape)
-            features = []
-            for v in video:
-                fea = feature_stractor(v)
-                features.append(fea)
+        sequence, label, n_frames = batch_padding(features, label)
+
+        sequence = sequence.cuda()
+
+        _, pred = rnn(sequence, n_frames)
+
+        batch_lb = torch.from_numpy(np.asarray(label)).cuda()
+        #print(i, batch_lb)
+
+
+        loss = criterion(pred, batch_lb)
+
+        optimizer.zero_grad()
+        loss.backward()
+        optimizer.step()
+
+        train_info += ' loss: {:.4f}'.format(loss.data.cpu().numpy())
+        print(train_info)
+        f = open(os.path.join(args.save_dir, 'log.txt'), "a+")
+        f.write(train_info + '\n')
+
+        if epoch % args.val_epoch == 0:
+            ''' evaluate the model '''
+
+
+            acc = evaluate(feature_stractor, rnn, val_loader, args.data_dir)
+            val_info = 'Epoch: [{}] ACC:{}'.format(epoch, acc)
+            print(val_info)
+            f = open(os.path.join(args.save_dir, 'log.txt'), "a+")
+            f.write(val_info + '\n')
+
+            ''' save best model '''
+            if acc > best_acc:
+                #print('saved model', epoch)
+                save_model(rnn, os.path.join(args.save_dir, 'model_best_rnn.pth.tar'))
+                save_model(feature_stractor, os.path.join(args.save_dir, 'model_best_stractor.pth.tar'))
+                best_acc = acc
+
+        ''' save model '''
+        save_model(rnn, os.path.join(args.save_dir, 'model_{}_rnn.pth.tar'.format(epoch)))
+        save_model(feature_stractor, os.path.join(args.save_dir, 'model_{}_stractor.pth.tar'.format(epoch)))
+
+
 

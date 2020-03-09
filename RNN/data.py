@@ -48,6 +48,5 @@ class DATA(Dataset):
 
         return video
 
-csv_file = '/media/fj-sanguino/Elements/Breakfast/Splits/split0/labels_split0.csv'
 
 
